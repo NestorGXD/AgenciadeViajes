@@ -11,7 +11,18 @@ export function getEmailFrom(): string {
   return process.env.EMAIL_FROM || "Contigo Tours <onboarding@resend.dev>";
 }
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+export function getAppUrl(): string {
+  if (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes("contigotours.vercel.app")) {
+    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
+  }
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return "http://localhost:3000";
+}
 
 interface SendVerificationEmailParams {
   to: string;
@@ -47,6 +58,7 @@ export interface SendSchoolTripInquiryParams {
  * Enviar correo de verificación de cuenta
  */
 export async function sendVerificationEmail({ to, name, token }: SendVerificationEmailParams) {
+  const appUrl = getAppUrl();
   const verifyUrl = `${appUrl}/auth/verify?token=${token}`;
   const cleanTo = to.toLowerCase().trim();
 
@@ -187,6 +199,7 @@ export async function sendBookingConfirmationEmail({
   children,
   totalPrice,
 }: SendBookingConfirmationParams) {
+  const appUrl = getAppUrl();
   const voucherUrl = `${appUrl}/client/bookings/${bookingCode}`;
   const cleanTo = to.toLowerCase().trim();
 
