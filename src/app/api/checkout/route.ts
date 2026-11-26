@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/auth";
 import { getStripe } from "@/lib/stripe";
+import { getAppUrl } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
       console.warn("Prisma query failed in checkout, using fallback data:", dbErr);
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = getAppUrl();
     const customerEmail = booking?.user?.email || guestEmail || session?.email || "cliente@contigotours.com";
     const destinationName = booking?.destination?.name || "Paquete de Viaje Contigo Tours";
     const amount = booking?.totalPrice || 500;

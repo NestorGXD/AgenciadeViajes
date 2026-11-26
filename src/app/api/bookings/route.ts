@@ -4,6 +4,7 @@ import { getServerSession, signToken, TOKEN_COOKIE_NAME, hashPassword } from "@/
 import { generateBookingCode, calculateNights } from "@/lib/utils";
 import { FALLBACK_DESTINATIONS } from "@/lib/destinations";
 import { getStripe } from "@/lib/stripe";
+import { getAppUrl } from "@/lib/mail";
 
 export const dynamic = "force-dynamic";
 
@@ -232,7 +233,7 @@ export async function POST(req: Request) {
     }
 
     // 4. Crear sesión oficial de Stripe Checkout
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = getAppUrl();
     const stripeInstance = getStripe();
     let stripeUrl: string | null = null;
 

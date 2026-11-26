@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/auth";
-import { sendVerificationEmail } from "@/lib/mail";
+import { sendVerificationEmail, getAppUrl } from "@/lib/mail";
 import crypto from "crypto";
 
 export async function POST(req: Request) {
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       token: verificationToken,
     });
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = getAppUrl();
     const deliveredTo = (mailResult as any)?.deliveredTo || user.email;
 
     return NextResponse.json({
