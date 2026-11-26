@@ -5,6 +5,8 @@ import { generateBookingCode, calculateNights } from "@/lib/utils";
 import { FALLBACK_DESTINATIONS } from "@/lib/destinations";
 import { getStripe } from "@/lib/stripe";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: Request) {
   try {
     const session = await getServerSession();
