@@ -4,7 +4,7 @@ import { getServerSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const session = await getServerSession();
     if (!session || session.role !== "ADMIN") {
