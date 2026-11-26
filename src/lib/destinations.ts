@@ -1,0 +1,172 @@
+import prisma from "@/lib/prisma";
+import { DestinationData } from "@/types";
+
+export const FALLBACK_DESTINATIONS: DestinationData[] = [
+  {
+    id: "dest-cancun",
+    name: "Cancún y Riviera Maya",
+    slug: "cancun-riviera-maya",
+    description: "Playas de arena blanca, aguas turquesas del Caribe, cenotes sagrados y una vibrante vida nocturna.",
+    country: "México",
+    city: "Cancún",
+    latitude: 21.1619,
+    longitude: -86.8515,
+    basePrice: 480.0,
+    imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    featured: true,
+    rating: 4.9,
+    hotels: [
+      {
+        id: "h-cancun-1",
+        destinationId: "dest-cancun",
+        name: "Grand Riviera All-Inclusive Resort",
+        description: "Resort 5 estrellas frente al mar Caribe con 7 restaurantes.",
+        address: "Blvd. Kukulcan Km 16.5, Cancún",
+        category: "ALL_INCLUSIVE",
+        pricePerNight: 220.0,
+        rating: 4.9,
+        imageUrl: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80",
+        amenities: "Piscina infinita,Spa,Playa privada,7 Restaurantes",
+      },
+    ],
+  },
+  {
+    id: "dest-cdmx",
+    name: "Ciudad de México (CDMX)",
+    slug: "ciudad-de-mexico-cdmx",
+    description: "Una metrópoli cosmopolita rica en historia prehispánica, museos de talla mundial y gastronomía galardonada.",
+    country: "México",
+    city: "CDMX",
+    latitude: 19.4326,
+    longitude: -99.1332,
+    basePrice: 350.0,
+    imageUrl: "https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?auto=format&fit=crop&w=1200&q=80",
+    featured: true,
+    rating: 4.8,
+    hotels: [
+      {
+        id: "h-cdmx-1",
+        destinationId: "dest-cdmx",
+        name: "Boutique Hotel Casa Colonial Roma",
+        description: "Mansión de época porfiriana remodelada.",
+        address: "Colima 120, Roma Norte, CDMX",
+        category: "BOUTIQUE",
+        pricePerNight: 140.0,
+        rating: 4.9,
+        imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80",
+        amenities: "Rooftop,Café de especialidad,Pet-friendly",
+      },
+    ],
+  },
+  {
+    id: "dest-oaxaca",
+    name: "Oaxaca de Juárez",
+    slug: "oaxaca-de-juarez",
+    description: "Tierra de mezcal, mole tradicional, arquitectura virreinal y Monte Albán.",
+    country: "México",
+    city: "Oaxaca",
+    latitude: 17.0732,
+    longitude: -96.7266,
+    basePrice: 290.0,
+    imageUrl: "https://images.unsplash.com/photo-1512813195386-6cf811ad3542?auto=format&fit=crop&w=1200&q=80",
+    featured: true,
+    rating: 4.9,
+    hotels: [],
+  },
+  {
+    id: "dest-cartagena",
+    name: "Cartagena de Indias",
+    slug: "cartagena-de-indias",
+    description: "Murallas coloniales centenarias, balcones con buganvilias y atardeceres mágicos en el mar Caribe.",
+    country: "Colombia",
+    city: "Cartagena",
+    latitude: 10.391,
+    longitude: -75.4794,
+    basePrice: 420.0,
+    imageUrl: "https://images.unsplash.com/photo-1583531352515-8884af319dc1?auto=format&fit=crop&w=1200&q=80",
+    featured: true,
+    rating: 4.9,
+    hotels: [],
+  },
+  {
+    id: "dest-medellin",
+    name: "Medellín: Ciudad de la Eterna Primavera",
+    slug: "medellin-eterna-primavera",
+    description: "Clima perfecto todo el año, innovación urbana, Comuna 13 y el vibrante sector del Poblado.",
+    country: "Colombia",
+    city: "Medellín",
+    latitude: 6.2442,
+    longitude: -75.5812,
+    basePrice: 340.0,
+    imageUrl: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=1200&q=80",
+    featured: true,
+    rating: 4.9,
+    hotels: [],
+  },
+  {
+    id: "dest-bogota",
+    name: "Bogotá Histórica y Cultural",
+    slug: "bogota-historica",
+    description: "Descubre la capital de los Andes con su barrio colonial de La Candelaria y el cerro de Monserrate.",
+    country: "Colombia",
+    city: "Bogotá",
+    latitude: 4.711,
+    longitude: -74.0721,
+    basePrice: 320.0,
+    imageUrl: "https://images.unsplash.com/photo-1568632234157-ce7aecd03d0d?auto=format&fit=crop&w=1200&q=80",
+    featured: false,
+    rating: 4.7,
+    hotels: [],
+  },
+  {
+    id: "dest-cusco",
+    name: "Cusco y Machu Picchu",
+    slug: "cusco-machu-picchu",
+    description: "La capital sagrada del Imperio Inca y una de las maravillas del mundo moderno.",
+    country: "Perú",
+    city: "Cusco",
+    latitude: -13.5319,
+    longitude: -71.9675,
+    basePrice: 510.0,
+    imageUrl: "https://images.unsplash.com/photo-1526392060635-9d6019884377?auto=format&fit=crop&w=1200&q=80",
+    featured: true,
+    rating: 5.0,
+    hotels: [],
+  },
+  {
+    id: "dest-puntacana",
+    name: "Punta Cana",
+    slug: "punta-cana",
+    description: "Kilómetros de cocoteros, arenas finas y complejos turísticos all-inclusive de ensueño en el Caribe.",
+    country: "República Dominicana",
+    city: "Punta Cana",
+    latitude: 18.5601,
+    longitude: -68.3725,
+    basePrice: 495.0,
+    imageUrl: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+    featured: false,
+    rating: 4.8,
+    hotels: [],
+  },
+];
+
+export async function getDestinationsList(): Promise<DestinationData[]> {
+  try {
+    const list = await prisma.destination.findMany({
+      include: {
+        hotels: true,
+        _count: {
+          select: { hotels: true, bookings: true },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (list && list.length > 0) {
+      return list as unknown as DestinationData[];
+    }
+  } catch (error) {
+    console.warn("Prisma no conectado aún o sin seed. Usando destinos de respaldo.");
+  }
+  return FALLBACK_DESTINATIONS;
+}

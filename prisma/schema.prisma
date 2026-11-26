@@ -1,0 +1,141 @@
+// Prisma Schema para Contigo Tours
+// Configurado para PostgreSQL (Neon / Supabase / Vercel Postgres) y adaptable a MySQL/SQLite
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+enum HotelCategory {
+  ALL_INCLUSIVE  // Todo Incluido
+  BOUTIQUE       // Hotel Boutique
+  BUDGET         // Económico
+  BEACHFRONT     // Frente al Mar
+  PET_FRIENDLY   // Pet Friendly
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  PAID
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id                  String    @id @default(uuid())
+  email               String    @unique
+  password            String
+  name                String
+  phone               String?
+  role                Role      @default(CLIENT)
+  emailVerified       DateTime?
+  verificationToken   String?   @unique
+  verificationExpires DateTime?
+  resetToken          String?
+  resetExpires        DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  bookings            Booking[]
+
+  @@map("users")
+}
+
+model Destination {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String
+  country     String
+  city        String
+  latitude    Float
+  longitude   Float
+  basePrice   Float     // Precio base por persona
+  imageUrl    String
+  featured    Boolean   @default(false)
+  rating      Float     @default(4.8)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  hotels      Hotel[]
+  bookings    Booking[]
+
+  @@map("destinations")
+}
+
+model Hotel {
+  id            String        @id @default(uuid())
+  destinationId String
+  name          String
+  description   String
+  address       String
+  category      HotelCategory @default(ALL_INCLUSIVE)
+  pricePerNight Float         // Suplemento o tarifa por noche
+  rating        Float         @default(4.7)
+  imageUrl      String
+  amenities     String        // Separado por comas: "Wifi,Piscina,Spa,Desayuno"
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  destination   Destination   @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  bookings      Booking[]
+
+  @@map("hotels")
+}
+
+model Booking {
+  id            String        @id @default(uuid())
+  bookingCode   String        @unique // Ej. "CT-2024-ABCD"
+  userId        String
+  destinationId String
+  hotelId       String?
+  checkIn       DateTime
+  checkOut      DateTime
+  adults        Int           @default(1)
+  children      Int           @default(0)
+  preferences   String?       // JSON o texto de requerimientos especiales
+  totalPrice    Float
+  status        BookingStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destination   Destination   @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  hotel         Hotel?        @relation(fields: [hotelId], references: [id], onDelete: SetNull)
+  payment       Payment?
+
+  @@map("bookings")
+}
+
+model Payment {
+  id                    String        @id @default(uuid())
+  bookingId             String        @unique
+  stripePaymentIntentId String?       @unique
+  stripeSessionId       String?       @unique
+  amount                Float
+  currency              String        @default("USD")
+  status                PaymentStatus @default(PENDING)
+  paymentMethod         String        @default("STRIPE") // STRIPE, MERCADOPAGO, TRANSFERENCIA
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  booking               Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
